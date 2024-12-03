@@ -1,12 +1,12 @@
 :root {
-    --primary-color: #FF6B6B;
-    --secondary-color: #4ECDC4;
-    --background-color: #f0f8ff;
+    --primary-color: #ff6b6b;
+    --secondary-color: #ffd93d;
     --text-color: #333;
+    --bg-color: #fdffe9;
+    --border-color: #333;
+    --section-spacing: 3rem;
     --window-bg: rgba(255, 255, 255, 0.95);
     --spacing: 2rem;
-    --border-color: #333;
-    --section-spacing: clamp(2rem, 4vw, 3rem);
     --card-spacing: clamp(1rem, 2vw, 1.5rem);
 }
 
@@ -17,97 +17,91 @@
 }
 
 html {
-    scroll-behavior: smooth;
-    font-size: 16px;
-    overflow-x: hidden;
+    height: 100%;
 }
 
 body {
     margin: 0;
     padding: 0;
     font-family: 'Press Start 2P', cursive;
-    background: linear-gradient(180deg, #fdffe9 0%, #c2e9d2 100%);
     color: var(--text-color);
     line-height: 1.6;
     overflow-x: hidden;
-    position: relative;
-    min-height: 100vh;
+    background: none;
 }
 
 body::before {
     content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: url('assets/green_clouds.png') center/100% auto repeat-x;
-    opacity: 0.7;
-    pointer-events: none;
-    z-index: 0;
-}
-
-/* Ticker styles */
-.ticker-container {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    background: rgba(0, 0, 0, 0.8);
-    padding: 10px 0;
-    z-index: 1000;
-    overflow: hidden;
+    height: 100%;
+    z-index: -2;
+    background-color: var(--bg-color);
 }
 
-.ticker {
-    display: flex;
-    white-space: nowrap;
-    width: fit-content;
+.parallax-container {
+    height: 100vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+    perspective: 2px;
 }
 
-.ticker-content {
-    color: var(--primary-color);
-    font-size: 14px;
-    padding-right: 50px;
-    animation: ticker 20s linear infinite;
-    text-shadow: 0 0 5px rgba(255, 107, 107, 0.5);
+.parallax-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 70vh; /* Reduced height to make room for clouds */
+    background: url('assets/animatedbg.png') repeat-x top;
+    background-size: auto 100%;
+    will-change: transform;
+    z-index: -2;
+    animation: slideBackground 30s linear infinite;
 }
 
-@keyframes ticker {
+@keyframes slideBackground {
     0% {
-        transform: translateX(0);
+        background-position: 0 top;
     }
     100% {
-        transform: translateX(-100%);
+        background-position: -100% top;
     }
 }
 
-/* Background overlay */
-.background-overlay {
+.content {
+    position: relative;
+    z-index: 1;
+    background: transparent;
+}
+
+.content::before {
+    content: '';
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(
-        rgba(0, 0, 0, 0.4),
-        rgba(0, 0, 0, 0.2)
-    );
+    pointer-events: none;
     z-index: 1;
+    background: none;
 }
 
 .container {
+    position: relative;
+    z-index: 2;
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 1rem;
-    position: relative;
-    z-index: 1;
     padding-top: 50px; /* Space for ticker */
 }
 
 section {
-    padding: var(--section-spacing) 0;
+    padding: 0;
+    margin: 0;
+    position: relative;
 }
 
 .window {
@@ -127,35 +121,110 @@ section {
 }
 
 .hero {
-    min-height: 100vh;
+    min-height: 90vh;
     position: relative;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
     text-align: center;
-    padding: 0;
-    margin-top: -50px; /* Compensate for ticker */
-    overflow: hidden;
 }
 
 .hero-content {
-    width: 100%;
-    height: 100vh;
     position: relative;
+    width: 100%;
     display: flex;
-    align-items: center;
-    justify-content: flex-end;
     flex-direction: column;
-    gap: 0;
-    padding-bottom: 3rem;
+    align-items: center;
 }
 
 .hero-image {
-    max-width: 60%;
-    max-height: 65vh;
-    object-fit: contain;
-    margin-bottom: -2rem;
-    z-index: 1;
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    margin: 0 0 -2rem;
+}
+
+.hero h1 {
+    font-size: 3rem;
+    color: var(--primary-color);
+    text-shadow: 0 0 10px rgba(255, 107, 107, 0.5);
+    margin: 0 0 1rem;
+}
+
+.hero-cards {
+    display: flex;
+    gap: 1.5rem;
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.pixel-window {
+    background: rgba(255, 255, 255, 0.95);
+    border: 3px solid var(--primary-color);
+    border-radius: 10px;
+    padding: 1.2rem;
+    flex: 1;
+    box-shadow: 0 0 20px rgba(255, 107, 107, 0.2);
+    backdrop-filter: blur(5px);
+    display: flex;
+    flex-direction: column;
+}
+
+.pixel-title {
+    color: var(--primary-color);
+    font-size: 1.2rem;
+    margin: 0 0 1rem;
+    text-transform: uppercase;
+    text-shadow: 2px 2px 4px rgba(255, 107, 107, 0.2);
+}
+
+.pixel-window p {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin: 0;
+    color: #333;
+}
+
+.pixel-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    text-align: left;
+}
+
+.pixel-list li {
+    margin-bottom: 1rem;
+    padding-left: 2rem;
+    position: relative;
+    line-height: 1.4;
+    font-size: 0.9rem;
+}
+
+.pixel-list li:last-child {
+    margin-bottom: 0;
+}
+
+.pixel-icon {
+    position: absolute;
+    left: 0;
+    top: 2px;
+    font-size: 1.2rem;
+}
+
+.pixel-list strong {
+    color: var(--primary-color);
+    display: block;
+    margin-bottom: 0.3rem;
+    font-size: 0.9rem;
+}
+
+.hero-text {
+    font-size: 1rem;
+    line-height: 1.8;
+    max-width: 800px;
+    margin: 0 auto;
 }
 
 .hero-text {
@@ -208,9 +277,9 @@ section {
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
     letter-spacing: 1px;
     line-height: 1.6;
-    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    background: none;
+    -webkit-background-clip: none;
+    -webkit-text-fill-color: #2a2a2a;
     font-weight: bold;
     padding: 0.5rem 0;
 }
@@ -250,9 +319,9 @@ section {
 
 .logo h1 {
     font-size: clamp(1.8rem, 4vw, 3rem);
-    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    background: none;
+    -webkit-background-clip: none;
+    -webkit-text-fill-color: var(--primary-color);
     margin-bottom: 0.5rem;
     text-shadow: 0 0 10px rgba(255, 107, 107, 0.3);
 }
@@ -305,7 +374,8 @@ section {
 }
 
 .tokenomics {
-    text-align: center;
+    padding: var(--section-spacing) 1rem;
+    margin-top: -3rem;
 }
 
 .token-stats {
@@ -341,65 +411,161 @@ section {
 
 .social-links {
     display: flex;
-    flex-wrap: wrap;
     justify-content: center;
-    gap: 1rem;
-    margin-top: var(--card-spacing);
+    gap: 30px;
+    margin: 20px 0;
+    position: relative;
+    z-index: 10;
 }
 
-.social-btn {
-    padding: 0.8rem 1.5rem;
-    background: var(--primary-color);
-    color: white;
+.social-icon {
+    color: var(--text-color);
+    font-size: 28px;
     text-decoration: none;
-    border: 2px solid var(--border-color);
-    border-radius: 10px;
-    font-size: clamp(0.7rem, 1.5vw, 0.9rem);
-    min-width: 180px;
-    text-align: center;
     transition: all 0.3s ease;
+    padding: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid transparent;
+    cursor: pointer;
+    position: relative;
 }
 
-.social-btn:hover {
-    transform: translateY(-3px);
-    background: var(--secondary-color);
+.social-icon i {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.social-icon:hover {
+    transform: translateY(-5px);
+    color: var(--primary-color);
+    background: rgba(255, 255, 255, 0.2);
+    border-color: var(--primary-color);
+    box-shadow: 0 0 15px rgba(255, 107, 107, 0.3);
+}
+
+/* Ticker styles */
+.ticker-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 10px 0;
+    z-index: 1000;
+    overflow: hidden;
+}
+
+.ticker {
+    display: flex;
+    white-space: nowrap;
+    width: fit-content;
+}
+
+.ticker-content {
+    color: var(--primary-color);
+    font-size: 14px;
+    padding-right: 50px;
+    animation: ticker 20s linear infinite;
+    text-shadow: 0 0 5px rgba(255, 107, 107, 0.5);
+}
+
+@keyframes ticker {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
+/* Background overlay */
+.background-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 1;
+}
+
+.green-clouds {
+    position: fixed;
+    width: 100%;
+    height: 50vh; /* Adjusted height for overlap */
+    background: url('assets/green_clouds.png') repeat-x;
+    background-size: auto 100%;
+    opacity: 0.8;
+    z-index: -1;
+    animation: floatClouds 120s linear infinite;
+    top: 60vh; /* Position to overlap with animated bg */
+}
+
+@keyframes floatClouds {
+    from {
+        background-position: 0 0;
+    }
+    to {
+        background-position: -200% 0;
+    }
 }
 
 @media (max-width: 768px) {
     :root {
-        --section-spacing: 1.5rem;
-        --card-spacing: 1rem;
+        --section-spacing: 2rem;
     }
 
-    .ticker-content {
-        font-size: 12px;
+    .hero {
+        min-height: auto;
+        padding-top: 1rem;
     }
 
-    .window {
-        padding: var(--card-spacing);
-        border-width: 2px;
-        box-shadow: 4px 4px 0px var(--border-color);
+    .hero-image {
+        max-width: 300px;
+        margin: 0 0 -1rem;
+    }
+
+    .hero h1 {
+        font-size: 2.5rem;
+        margin: 0 0 0.5rem;
+    }
+
+    .hero-cards {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .pixel-window {
+        padding: 1rem;
+    }
+
+    .tokenomics {
+        margin-top: -2rem;
     }
 
     .features {
-        grid-template-columns: 1fr;
-        gap: var(--card-spacing);
-    }
-
-    .social-links {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .social-btn {
-        width: 100%;
-        max-width: 250px;
+        margin-top: -1rem;
     }
 }
 
-@media (prefers-reduced-motion: reduce) {
-    * {
-        animation: none !important;
-        transition: none !important;
+@media (max-width: 480px) {
+    :root {
+        --section-spacing: 1.5rem;
+    }
+
+    .hero h1 {
+        font-size: 2rem;
+    }
+
+    .hero-image {
+        max-width: 250px;
     }
 }

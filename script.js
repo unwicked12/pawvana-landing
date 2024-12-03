@@ -1,9 +1,29 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Animate numbers in tokenomics
-    const animateValue = (element, start, end, duration) => {
-        if (element.dataset.animated === 'true') return;
-        element.dataset.animated = 'true';
+    // Parallax effect
+    const parallaxBackground = document.querySelector('.parallax-background');
+    let scrollPosition = 0;
+    let ticking = false;
 
+    window.addEventListener('scroll', () => {
+        scrollPosition = window.pageYOffset;
+        if (!ticking) {
+            window.requestAnimationFrame(() => {
+                // Calculate parallax offset based on scroll position
+                const offset = scrollPosition * 0.4;
+                
+                // Apply transform with both the automatic sliding animation and scroll offset
+                const currentTransform = getComputedStyle(parallaxBackground).transform;
+                const slideX = -((Date.now() / 60) % 100); // Smooth sliding effect
+                
+                parallaxBackground.style.transform = `translate3d(${slideX}%, ${offset}px, 0)`;
+                ticking = false;
+            });
+            ticking = true;
+        }
+    });
+
+    // Number animation for tokenomics
+    const animateValue = (element, start, end, duration) => {
         let startTimestamp = null;
         const step = (timestamp) => {
             if (!startTimestamp) startTimestamp = timestamp;
@@ -17,28 +37,21 @@ document.addEventListener('DOMContentLoaded', () => {
         window.requestAnimationFrame(step);
     };
 
-    // Intersection Observer for animations
-    const observerOptions = {
-        threshold: 0.2,
-        rootMargin: '20px'
-    };
-
+    // Animate token amount when in view
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                if (entry.target.classList.contains('token-amount')) {
-                    const finalNumber = parseInt(entry.target.textContent.replace(/,/g, ''));
-                    animateValue(entry.target, 0, finalNumber, 1500);
-                }
-                entry.target.classList.add('visible');
+                const tokenAmount = entry.target;
+                animateValue(tokenAmount, 0, 1000000000000, 2000);
+                observer.unobserve(tokenAmount);
             }
         });
-    }, observerOptions);
+    }, { threshold: 0.5 });
 
-    // Observe elements for animation
-    document.querySelectorAll('.feature-card, .token-amount, .social-btn').forEach(el => {
-        observer.observe(el);
-    });
+    const tokenAmount = document.querySelector('.token-amount');
+    if (tokenAmount) {
+        observer.observe(tokenAmount);
+    }
 
     // Initialize page
     window.addEventListener('load', () => {
